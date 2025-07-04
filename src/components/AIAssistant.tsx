@@ -1,11 +1,10 @@
-
+// src/components/AIAssistant.tsx
 
 import React, { useState } from 'react';
 import type { WomanInSportData } from '../types';
 import { generateReport } from '../services/geminiService';
 import { SparklesIcon, PaperAirplaneIcon } from './icons';
 import ReactMarkdown from 'react-markdown';
-
 
 interface AIAssistantProps {
     participants: WomanInSportData[];
@@ -43,15 +42,14 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ participants }) => {
         setPrompt(suggestion);
     }
 
+    // Sugestão de prompt sobre escolaridade foi removida
     const suggestionPrompts = [
-        "Qual a escolaridade média por região?",
         "Compare a distribuição de raça entre atletas e gestoras.",
         "Liste as participantes PCD e suas áreas de atuação.",
         "Gere um resumo executivo sobre o perfil das participantes.",
     ];
     
     return (
-        
         <div className="bg-brand-secondary p-6 rounded-lg shadow-lg border border-brand-tertiary flex flex-col">
             <div className="flex items-center mb-4">
                 <SparklesIcon className="w-6 h-6 text-brand-accent mr-3" />
