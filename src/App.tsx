@@ -2,11 +2,13 @@
 
 import React, { useState, Suspense, useEffect, useMemo } from 'react';
 import type { WomanInSportData } from './types';
-import { ProfessionalArea, EducationLevel } from './types';
+// CORREÇÃO: 'EducationLevel' removido da importação pois não é mais usado
+import { ProfessionalArea } from './types';
 import Header from './components/Header';
 import KPICard from './components/KPICard';
 import DataTable from './components/ProjectTable';
-import { UserGroupIcon, AcademicCapIcon, BriefcaseIcon, PresentationChartLineIcon } from './components/icons';
+// CORREÇÃO: 'AcademicCapIcon' removido da importação pois não é mais usado
+import { UserGroupIcon, BriefcaseIcon, PresentationChartLineIcon } from './components/icons';
 
 const DashboardCharts = React.lazy(() => import('./components/ProjectCharts').then(module => ({ default: module.DashboardCharts })));
 const AIAssistant = React.lazy(() => import('./components/AIAssistant'));
@@ -28,8 +30,7 @@ function parseCSV(csvText: string): WomanInSportData[] {
 
     const COL_CIDADE = 2, COL_ESTADO = 3, COL_RACA = 5,
           COL_IDADE_RANGE = 6, COL_DEFICIENCIA = 7, COL_AREA_ATUACAO = 8;
-          // A coluna de escolaridade não é mais lida pois não está na planilha.
-
+    
     for (const [index, line] of lines.entries()) {
         if (!line) continue;
         const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.trim().replace(/^"|"$/g, ''));
@@ -47,7 +48,7 @@ function parseCSV(csvText: string): WomanInSportData[] {
                 race: values[COL_RACA] || 'Não informado',
                 isPersonWithDisability: values[COL_DEFICIENCIA] === 'Sim',
                 professionalArea: values[COL_AREA_ATUACAO] || 'Outra',
-                educationLevel: 'Não informado', // Definido como padrão
+                educationLevel: 'Não informado',
             };
             data.push(participant);
         } catch(e) {
@@ -60,7 +61,7 @@ function parseCSV(csvText: string): WomanInSportData[] {
 const ageRanges = [
     { label: 'Todas', value: 'all' },
     { label: '16 a 25 anos', value: '16-25' },
-    { label: '26 a 39 anos', value: '26-39' },
+    { label: '26 a 39 anos', 'value': '26-39' },
     { label: '40 a 59 anos', value: '40-59' },
     { label: '60 ou mais', value: '60-Infinity' },
 ];
@@ -87,7 +88,6 @@ const App: React.FC = () => {
         return participants.filter(p => p.age >= minAge && (maxAge === Infinity ? true : p.age < maxAge + 1));
     }, [participants, activeAgeFilter]);
 
-    // O cálculo de 'higherEducation' foi removido pois não temos os dados.
     const { total, avgAge, managers } = useMemo(() => {
         const totalParticipants = filteredParticipants.length;
         if (totalParticipants === 0) return { total: 0, avgAge: '0.0', managers: 0 };
@@ -132,7 +132,6 @@ const App: React.FC = () => {
                     </div>
                 </section>
                 <section>
-                    {/* Grid ajustado para 3 colunas em telas grandes e KPI de escolaridade removido */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <KPICard title="Total de Participantes" value={total} icon={<UserGroupIcon className="w-8 h-8 text-brand-subtle" />} />
                         <KPICard title="Idade Média" value={avgAge} icon={<PresentationChartLineIcon className="w-8 h-8 text-status-blue" />} />
